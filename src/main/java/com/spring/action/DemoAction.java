@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping(value = "/demo")
+@RequestMapping("/demo")
 public class DemoAction {
 	
 	@Autowried

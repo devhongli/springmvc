@@ -67,30 +67,33 @@ public class DispatchServlet extends HttpServlet {
     }
 
     private void doAutowired() {
-        if(beanMap.isEmpty()){return;}
+        if(beanMap.isEmpty()){ return; }
 
-        for (Map.Entry<String, Object> entry : beanMap.entrySet()) {
+        for (Map.Entry<String,Object> entry : beanMap.entrySet()) {
+
             Field [] fields = entry.getValue().getClass().getDeclaredFields();
 
-            for(Field field : fields){
-                if(!field.isAnnotationPresent(Autowried.class)){return;}
+            for (Field field : fields){
+
+                if(!field.isAnnotationPresent(Autowried.class)){continue;}
 
                 Autowried autowried = field.getAnnotation(Autowried.class);
-                String beanName = autowried.value().trim();
 
+                String beanName = autowried.value().trim();
                 if("".equals(beanName)){
                     beanName = field.getType().getName();
                 }
                 field.setAccessible(true);
 
                 try {
-                    field.set(entry.getValue(), beanMap.get(beanName));
-                } catch (Exception e){
+                    field.set(entry.getValue(),beanMap.get(beanName));
+                } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
-            }
-        }
 
+            }
+
+        }
     }
 
     private void doRegistry() {
@@ -121,7 +124,7 @@ public class DispatchServlet extends HttpServlet {
                     Class<?>[] interfaces = clazz.getInterfaces();
 
                     for (Class<?> i : interfaces){
-                        beanMap.put(beanName, instance);
+                        beanMap.put(i.getName(), instance);
                     }
 
                 }else{
